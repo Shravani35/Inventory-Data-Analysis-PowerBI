@@ -1,0 +1,25 @@
+-- Data Cleaning
+SELECT distinct Order_Date_DD_MM_YYYY
+FROM prod.`prod+env+inventory+dataset`
+WHERE Order_Date_DD_MM_YYYY is null or Order_Date_DD_MM_YYYY = ''
+
+-- Update Product IDs
+update prod.`prod+env+inventory+dataset`
+set `Product ID` = 7 where `Product ID` = 21;
+
+update prod.`prod+env+inventory+dataset`
+set `Product ID` = 11 where `Product ID` = 22;
+
+-- Create new_table
+Create table new_table as 
+select 
+a.`Order Date (DD/MM/YYYY)` as `Order_Date_DD_MM_YYYY`,
+a.`Product ID` as `product_id`,
+a.availability,
+a.demand,
+b.`Product Name` as `product_name`,
+b.`Unit Price ($)` as `unit_price`
+from
+prod.`prod+env+inventory+dataset` as a 
+left join prod.products as b
+on a.`Product ID` = b.`Product ID`;
